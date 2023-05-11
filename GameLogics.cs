@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reversed_TicTacToe_For_Console
 {
-   public class GameLogics
+    public class GameLogics
     {
         private const int k_MinimumSizeOfBoard = 3;
         private const int k_MaximumSizeOfBoard = 9;
@@ -36,7 +36,19 @@ namespace Reversed_TicTacToe_For_Console
 
             return isTheSizeValid;
         }
-        
+
+        public bool CheckIsCellEmpty(int i_row, int i_col)
+        {
+            bool IsCellEmpty = false;
+
+            if (Board.TheGameBoard[i_row, i_col]==' ')
+            {
+                IsCellEmpty = true;
+            }
+
+            return IsCellEmpty;
+        }
+
         public Player PlayerOne
         {
             get
@@ -61,7 +73,15 @@ namespace Reversed_TicTacToe_For_Console
             }
         }
 
-        //get GameBoard
+        public GameBoard Board
+        {
+            get
+            {
+                return m_CurrentGameBoard;
+            }
+        }
+
+      
 
         //CheckWin :
         //CheckHorizontal   
