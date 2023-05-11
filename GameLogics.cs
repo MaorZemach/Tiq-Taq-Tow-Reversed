@@ -1,40 +1,43 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-
-namespace 1
+namespace Reversed_TicTacToe_For_Console
 {
-    public class Game
+   public class GameLogics
     {
         private const int k_MinimumSizeOfBoard = 3;
         private const int k_MaximumSizeOfBoard = 9;
         public const char k_PlayerOneSymbol = 'X';
         public const char k_PlayerTwoSymbol = 'O';
-        private GameBoard m_CurrentGameBoard;
         private Player m_PlayerOne;
         private Player m_PlayerTwo;
-        private readonly bool r_IsPlayerVresusComputer;
-
-        public Game(int i_BoardSize, string i_PlayerOneName, string i_PlayerTwoName, bool i_IsComputerPlaying)
+        private GameBoard m_CurrentGameBoard;
+        private readonly bool r_IsPlayerVsAI;
+        private int m_PlayerTurn;
+        public GameLogics(int i_BoardSize, bool i_IsPlayerVsAI)
         {
-            m_PlayerOne = new Player(k_PlayerOneSymbol, i_PlayerOneName);
-            m_PlayerTwo = new Player(k_PlayerTwoSymbol, i_PlayerTwoName);
+            m_PlayerOne = new Player(k_PlayerOneSymbol);
+            m_PlayerTwo = new Player(k_PlayerTwoSymbol);
             m_CurrentGameBoard = new GameBoard(i_BoardSize);
-            r_IsPlayerVresusComputer = i_IsComputerPlaying;
+            r_IsPlayerVsAI = i_IsPlayerVsAI;
+            m_PlayerTurn = 1;
         }
 
-        public static bool isTheSizeOfTheBoardValid(int i_BoardSize)
+        public static bool CheckGameBoardSize(int i_BoardSize)
         {
             bool isTheSizeValid = false;
-            if(i_BoardSize>= k_MinimumSizeOfBoard||i_BoardSize<=k_MaximumSizeOfBoard)
+            if (i_BoardSize >= k_MinimumSizeOfBoard && i_BoardSize <= k_MaximumSizeOfBoard)
             {
                 isTheSizeValid = true;
             }
 
             return isTheSizeValid;
         }
-
-        public Player FirstPlayer
+        
+        public Player PlayerOne
         {
             get
             {
@@ -50,12 +53,29 @@ namespace 1
             }
         }
 
-        public bool IsPlayerVersusComputer
+        public bool IsPlayerVsAI
         {
             get
             {
-                return r_IsPlayerVresusComputer;
+                return r_IsPlayerVsAI;
             }
         }
+
+        //get GameBoard
+
+        //CheckWin :
+        //CheckHorizontal   
+        //CheckDiagonal
+        //CheckVertical
+
+        //IsTheBoardFull:
+        //(IsTie)
+
+        //IsEndGame:
+        //(Tie or Win Or Q)
+
+        //UpdateBoardAfterTurn
+
+        //IncreaseWinnerScore
     }
 }
