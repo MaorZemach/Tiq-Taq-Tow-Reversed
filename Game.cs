@@ -2,7 +2,7 @@
 using System.Text;
 
 
-namespace B23_Ex02_LiorRoife_206257826_MaorZemach_206273690
+namespace 1
 {
     public class Game
     {
