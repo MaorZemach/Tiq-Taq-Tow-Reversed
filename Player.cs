@@ -1,35 +1,21 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace B23_Ex02_LiorRoife_206257826_MaorZemach_206273690
+namespace Reversed_TicTacToe_For_Console
 {
-   public class Player
+    public class Player
     {
         private readonly char m_PlayerSymbol;
-        private readonly string m_PlayerName;
+        //private readonly string m_PlayerName;
         private int m_Score;
 
-        public Player(char i_Symbol, string i_Name)
+        public Player(char i_PlayerSymbol)
         {
-            m_PlayerSymbol = i_Symbol;
-            m_PlayerName = i_Name;
             m_Score = 0;
-        }
-
-        public char Symbol
-        {
-            get
-            {
-                return m_PlayerSymbol;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return m_PlayerName;
-            }
+            m_PlayerSymbol = i_PlayerSymbol;
         }
 
         public int Score
@@ -41,6 +27,14 @@ namespace B23_Ex02_LiorRoife_206257826_MaorZemach_206273690
             set
             {
                 m_Score = value;
+            }
+        }
+
+        public char PlayerSymbol
+        {
+            get
+            {
+                return m_PlayerSymbol;
             }
         }
     }
