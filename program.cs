@@ -1,16 +1,16 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using UI;
+using System.Threading.Tasks;
 
-
-namespace B23_Ex02_LiorRoife_206257826_MaorZemach_206273690
+namespace Reversed_TicTacToe_For_Console
 {
-  public class Program
+    public class Program
     {
         public static void Main()
         {
-            
+            //UserInterface.RunGame();
         }
-        
     }
 }
