@@ -11,7 +11,7 @@ namespace Reversed_TicTacToe_For_Console
     {
         private int m_AmountOfMarkedBoardCells;
         private int m_BoardSize;
-        private char[,] m_GameBoard;
+        public char[,] m_GameBoard;
 
         public GameBoard(int i_BoardSize)
         {
@@ -54,6 +54,45 @@ namespace Reversed_TicTacToe_For_Console
                     m_GameBoard[row, col] = ' ';
                 }
             }
+        }
+
+        public void PrintBoard()
+        {
+            StringBuilder boardBuilder = new StringBuilder();
+
+            // Print first row of numbers
+            boardBuilder.Append("  ");
+            for (int colNum = 0; colNum < m_BoardSize; colNum++)
+            {
+                boardBuilder.Append($"{colNum + 1}   ");
+            }
+            boardBuilder.AppendLine();
+
+            // Print each row
+            for (int rowNum = 0; rowNum < m_BoardSize; rowNum++)
+            {
+                boardBuilder.Append($"{rowNum + 1}|");
+                for (int colNum = 0; colNum < m_BoardSize; colNum++)
+                {
+                    boardBuilder.Append($" {GetCellValue(rowNum, colNum)} |");
+                }
+                boardBuilder.AppendLine();
+
+                boardBuilder.Append(" ");
+                for (int colNum = 0; colNum < ((m_BoardSize) * 4) + 1; colNum++)
+                {
+                    boardBuilder.Append("=");
+                }
+                boardBuilder.AppendLine();
+            }
+
+            // Print the built board string
+            Console.WriteLine(boardBuilder.ToString());
+        }
+
+        public char GetCellValue(int i_Row, int i_Col)
+        {
+            return m_GameBoard[i_Row, i_Col];
         }
     }
 }
