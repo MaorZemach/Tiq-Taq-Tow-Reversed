@@ -1,149 +1,273 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Ex02.ConsoleUtils;
+
+//TO DO:
+
+//intreface.run
+//Ask for input size
+//Check Input with the game logics
+//Ask PVP or PVAI
+//Print empty board
+
+//while(not Q , not EndGame)
+//MakeTurn:
+//get X,Y choice until it's legal or Q
+//check validity and print error if Cell is taken
+
+//clear prev board and print new board
+
+//Check EndGame?
+//-no , switch player
+//-yes (if vertical / diagonal / horizontal win / TIE / Q) print winner & score
+//ask user if he wants new game (with same score and board size)
 
 namespace Reversed_TicTacToe_For_Console
 {
     public class UserInterface
     {
-        public static void RunGame()
+        private const string k_SyntacticallyIncorrectInput = "input Syntax Error";        //Syntactically incorrect input
+        private const string k_SubstantiallyincorrectInput = "Input Out Of Range";       //Substantially incorrect input
+
+        private const string k_AskForNumberOfGuessesMsg = "Please Enter the maximal number of Guesses for the game (number between 4-10).";
+        private const string k_AskForGuesseMsg = "Please type your next guess <A B C D> or 'Q' to quit";
+        private const string k_AskIfNewGameMsg = "Would you like to start a new game? <Y/N>";
+        private const string k_NewGameSymbol = "y";
+        private const string k_NotNewGameSymbol = "n";
+        private const string k_QuitGameSymbol = "Q";
+        private const string k_NoMoreGuessesAllowedMsg = "No more guesses allowed. You Lost.";
+        private const string k_GoodByeMsg = "Good bye!";
+        //methods
+        //public GameLogics GameLogics;
+        public static void Run()
         {
-            GameLogics CurrentGame;
-            int BoardSize = GetBoardSize();
-            bool IsPlayerAgainstComputer = checkIfPlayerVersusTheComputer();
-            CurrentGame = new GameLogics(BoardSize,IsPlayerAgainstComputer);
-            MakeTurn(CurrentGame);
-            //Ask for input size
-            //Check Input with the game logics
-            //Ask PVP or PVAI
-            //Print empty board
+            GameLogics Game;
+            int boardSize;
+            int amountOfPlayers;
+            string validMove;
 
-            //while(not Q , not EndGame)
-            //MakeTurn:
-            //get X,Y choice until it's legal or Q
-            //check validity and print error if Cell is taken
+            Console.WriteLine("Welcome to Tic-Tac-Toe!");
+            boardSize = GetGameBoardSizeInput();
+            amountOfPlayers = GetAmountOfPlayers();
+            if (amountOfPlayers == 1)
+            {
+                Game = new GameLogics(boardSize, true);//1 player
+            }
+            else
+            {
+                Game = new GameLogics(boardSize, false);//2 players
+            }
+            PrintBoard(Game);
 
-            //clear prev board and print new board
+            validMove = getPlayerMoveInput(Game);
+            ExecuteValidMove(validMove , Game);
 
-            //Check EndGame?
-            //-no , switch player
-            //-yes (if vertical / diagonal / horizontal win / TIE / Q) print winner & score
-            //ask user if he wants new game (with same score and board size)
-
-
+            Console.WriteLine("testttttt ");
+            Console.WriteLine("test ");
 
         }
-        public static int GetBoardSize()
+
+
+        public static int GetGameBoardSizeInput()
         {
-            Console.WriteLine("Please enter the size of the game board (the board is a square shaped and its' size must be between 3 to 9):");
-            string sizeOfTheBoard = Console.ReadLine();
-            int BoardSize = int.Parse(sizeOfTheBoard);
+            int userInputBoardSize = 0;
+            string inputString;
 
-            while (GameLogics.CheckGameBoardSize(BoardSize) == false || sizeOfTheBoard.All(char.IsDigit) == false)
+            Console.WriteLine("Please enter the size of the game board (the board is square shaped and its' size must be between 3 to 9):");
+            inputString = Console.ReadLine();
+            while (GameLogics.CheckBoardSizeValidity(inputString) != true)
             {
-                if(sizeOfTheBoard.All(char.IsDigit) == false)
-                {
-                    Console.WriteLine("Invalid input. You must enter a number between 3 to 9:");
-                    sizeOfTheBoard = Console.ReadLine();
-                }
-                else if(GameLogics.CheckGameBoardSize(BoardSize) == false)
-                {
-                    Console.WriteLine("Invalid input. The number is not in the range , please enter new number (The number must be between 3 to 9):");
-                    sizeOfTheBoard = Console.ReadLine();
-                }
+                Console.WriteLine("Invalid input, please enter a number between 3 to 9");
+                inputString = Console.ReadLine();
             }
-            BoardSize = int.Parse(sizeOfTheBoard);
+            userInputBoardSize = int.Parse(inputString);
 
-            return BoardSize;
+            return userInputBoardSize;
         }
 
-        private static bool checkIfPlayerVersusTheComputer()
+        public static int GetAmountOfPlayers()
         {
-            bool isPlayerAgainstComputer = false;
-            Console.WriteLine("If you want to play against the computer press:'c' , if you want to play against another player press:'p'");
-            string playerChoice = Console.ReadLine();
+            int userInputAmountPlayers = 0;
+            string inputString;
 
-            while (playerChoice != "c" && playerChoice != "p")
+            Console.WriteLine("Please enter the amount of players (1 for Palyer VS Computer , 2 for Player VS Player:");
+            inputString = Console.ReadLine();
+            while (GameLogics.CheckAmountOfPlayersValidity(inputString) != true)
             {
-                Console.WriteLine("Invalid input. for game against the computer press:'c', for game against other player press:'p'");
-                playerChoice = Console.ReadLine();
+                Console.WriteLine("Invalid input, please enter a number between 1 to 2");
+                inputString = Console.ReadLine();
             }
-
-            if (playerChoice == "c")
-            {
-                isPlayerAgainstComputer = true;
-            }
-
-            return isPlayerAgainstComputer;
+            userInputAmountPlayers = int.Parse(inputString);
+            return userInputAmountPlayers;
         }
 
-        private static void MakeTurn (GameLogics io_CurrentGame)
+        private static string getPlayerMoveInput(GameLogics io_CurrentGame)
         {
-            string PlayerInput;
-            Console.WriteLine("If you want to make your turn press 'y' , else if you want to quit from the game press 'q'",Environment.NewLine);
-            PlayerInput = Console.ReadLine();
+            string inputString;
+
+            Console.WriteLine("Please enter your next move in the format of row,column or 'Q' to quit.", Environment.NewLine);
+            inputString = Console.ReadLine();
+
+            while (GameLogics.CheckMoveValidity(inputString, io_CurrentGame) != true)
+            {
+                Console.WriteLine("Invalid move input, please make sure you choose empty cell or 'Q' to quit.");
+                inputString = Console.ReadLine();
+            }
             // if player press q so go to EndGame
-            getPlayerMove(io_CurrentGame);
-        }
-          
-        private static void getPlayerMove(GameLogics io_CurrGame)
-        {
-            int row = getAndCheckRow(io_CurrGame);
-            int col = getAndCheckColumn(io_CurrGame);      
-            PlayerMoveValidator(io_CurrGame, row, col);
-
+            // getPlayerMove(io_CurrentGame);
+            return inputString;
         }
 
-        private static void PlayerMoveValidator(GameLogics io_CurrGame, int i_row,int i_col)
+        public static void PrintBoard(GameLogics i_CurrentGame)
         {
-            int currRow = i_row;
-            int currColumn = i_col;
-            bool isMoveValid = false;
+            Screen.Clear();
+            StringBuilder boardBuilder = new StringBuilder();
 
-            while (isMoveValid = io_CurrGame.CheckIsCellEmpty(currRow, currColumn) == false)
+            // Print first row of numbers
+            boardBuilder.Append("  ");
+            for (int colNum = 0; colNum < i_CurrentGame.CurrentBoard.BoardSize; colNum++)
             {
-                Console.WriteLine("The cell is already taken please choose another one: ",Environment.NewLine);
-                currRow = getAndCheckRow(io_CurrGame);
-                currColumn = getAndCheckColumn(io_CurrGame);
+                boardBuilder.Append($"{colNum + 1}   ");
+            }
+            boardBuilder.AppendLine();
+
+            // Print each row
+            for (int rowNum = 0; rowNum < i_CurrentGame.CurrentBoard.BoardSize; rowNum++)
+            {
+                boardBuilder.Append($"{rowNum + 1}|");
+                for (int colNum = 0; colNum < i_CurrentGame.CurrentBoard.BoardSize; colNum++)
+                {
+                    boardBuilder.Append($" {i_CurrentGame.CurrentBoard.GetCellValue(rowNum, colNum)} |");
+                }
+                boardBuilder.AppendLine();
+
+                boardBuilder.Append(" ");
+                for (int colNum = 0; colNum < ((i_CurrentGame.CurrentBoard.BoardSize) * 4) + 1; colNum++)
+                {
+                    boardBuilder.Append("=");
+                }
+                boardBuilder.AppendLine();
+            }
+            Console.WriteLine(boardBuilder.ToString());
+        }
+
+        public static void ExecuteValidMove(string i_ValidMove, GameLogics io_CurrentGame)
+        {
+            string isNewGame;
+            int NumOfPlayer = 0;
+
+            if (i_ValidMove.Equals(k_QuitGameSymbol))
+            {
+                //user {0} quited msg
+                //add 1 point to user {1}
+                //print score
+                //get input (ask if play another game) 
+                Console.WriteLine("Player {0} has quited the game.", io_CurrentGame.PlayerTurn);
+                if (io_CurrentGame.PlayerTurn == GameLogics.ePlayerID.Player1Turn)
+                {
+                    io_CurrentGame.PlayerTwo.Score++;
+                }
+                else//player 2 quited
+                {
+                    io_CurrentGame.PlayerOne.Score++;
+                }
+                PrintGameResults(io_CurrentGame);
+                isNewGame = AskForAnotherRound(io_CurrentGame);
+                if (isNewGame.Equals(k_NewGameSymbol))//'Y'
+                {
+                    //empty board
+                    io_CurrentGame.CurrentBoard.CreateNewBoard();
+                    PrintBoard(io_CurrentGame);
+                    io_CurrentGame.m_PlayerTurn = GameLogics.ePlayerID.Player1Turn;
+                }
+                else// 'N'
+                {
+                    Console.WriteLine(k_GoodByeMsg);
+                    Thread.Sleep(1000);
+                    Environment.Exit(1);
+                }
+                //Make New game
+            }
+            else//valid move
+            {
+                string exportedRow = i_ValidMove.Substring(0);
+                string exportedCol = i_ValidMove.Substring(2);
+                int convertedRow = int.Parse(exportedRow);
+                int convertedCol = int.Parse(exportedCol);
+
+                if(io_CurrentGame.PlayerTurn== GameLogics.ePlayerID.Player1Turn)
+                {
+                    io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerOne.PlayerSymbol);
+                }
+                else //if (io_CurrentGame.PlayerTurn == GameLogics.ePlayerID.Player1Turn)
+                {
+                    io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerTwo.PlayerSymbol);
+                }
+
+                //check if Win / Tie
+                bool isPlayerWon = io_CurrentGame.CheckWinner(ref NumOfPlayer);
+                if (isPlayerWon==true)
+                {
+                    Console.WriteLine("Congratulations Player {0} you are the winne", NumOfPlayer);
+                    PrintGameResults(io_CurrentGame);
+                }
+                else
+                {
+                    if(io_CurrentGame.CheckIfDraw() == true)
+                    {
+                        Console.WriteLine("The board is full , you are in a TIE");
+                        PrintGameResults(io_CurrentGame);
+                    }
+                }
+                    
+
+                //if yes, print results , ask game 
+              
+                io_CurrentGame.SwitchPlayerTurn();
+
+
+                // if endGame AskForAnotherRound(io_CurrentGame);
+                Console.WriteLine(k_AskIfNewGameMsg);
+                isNewGame = Console.ReadLine();
+                if(string.Compare(isNewGame, k_NewGameSymbol)==0)
+                {
+                    io_CurrentGame.CurrentBoard.CreateNewBoard();
+                    PrintBoard(io_CurrentGame);
+                    io_CurrentGame.PlayerTurn = GameLogics.ePlayerID.Player1Turn;
+                }
+
+                else if(string.Compare(isNewGame, k_NotNewGameSymbol)==0)
+                {
+                    Console.WriteLine(k_GoodByeMsg);
+                    Environment.Exit(1);
+                }
+
+
             }
         }
 
-        private static int getAndCheckRow(GameLogics io_CurrGame)
+        public static void PrintGameResults(GameLogics i_CurrentGame)
         {
-            string stringRow;
-            Console.WriteLine("Enter the row you want your symbol to be in:", Environment.NewLine);
-            stringRow = Console.ReadLine();
-            int row = int.Parse(stringRow);
-
-            while (row < 1 || row > io_CurrGame.Board.BoardSize || stringRow.All(char.IsDigit) == false)
-            {
-                Console.WriteLine("Invalid input. Enter a number between 1 to {0}", io_CurrGame.Board.BoardSize);
-                Console.WriteLine(Environment.NewLine);
-                stringRow = Console.ReadLine();
-                row = int.Parse(stringRow);
-            }
-
-            return row;
+            Console.WriteLine($"Game Results:{ Environment.NewLine}");
+            Console.WriteLine("Player One Score: {0} , Player Two Score: {1}.", i_CurrentGame.PlayerOne.Score, i_CurrentGame.PlayerTwo.Score);
         }
 
-        private static int getAndCheckColumn(GameLogics io_CurrGame)
+        public static string AskForAnotherRound(GameLogics i_CurrentGame)
         {
-            string stringColumn;
-            Console.WriteLine("Enter the column you want your symbol to be in:", Environment.NewLine);
-            stringColumn = Console.ReadLine();
-            int column = int.Parse(stringColumn);
+            string validInputString;
 
-            while (column < 1 || column > io_CurrGame.Board.BoardSize || stringColumn.All(char.IsDigit) == false)
+            Console.WriteLine("If you want to play another round press {0}, else press {1}.",k_NewGameSymbol , k_NotNewGameSymbol);
+            validInputString = Console.ReadLine();
+            while (!(validInputString.Equals(k_NewGameSymbol) || validInputString.Equals(k_NotNewGameSymbol)))
             {
-                Console.WriteLine("Invalid input. Enter a number between 1 to {0}", io_CurrGame.Board.BoardSize);
-                Console.WriteLine(Environment.NewLine);
-                stringColumn = Console.ReadLine();
-                column = int.Parse(stringColumn);
+                Console.WriteLine("Invalid input, please enter {0} for new game or {1} to exit.", k_NewGameSymbol, k_NotNewGameSymbol);
+                validInputString = Console.ReadLine();
             }
-
-            return column;
+            return validInputString;
         }
     }
 }

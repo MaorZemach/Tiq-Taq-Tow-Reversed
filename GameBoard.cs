@@ -11,14 +11,14 @@ namespace Reversed_TicTacToe_For_Console
     {
         private int m_AmountOfMarkedBoardCells;
         private int m_BoardSize;
-        private char[,] m_GameBoard;
+        public char[,] m_GameBoard;
 
         public GameBoard(int i_BoardSize)
         {
             m_AmountOfMarkedBoardCells = 0;
             m_BoardSize = i_BoardSize;
             m_GameBoard = new char[m_BoardSize, m_BoardSize];
-            gameBoardInitialization();
+            initGameBoard();
         }
 
         public int AmountOfMarkedBoardCells
@@ -45,15 +45,14 @@ namespace Reversed_TicTacToe_For_Console
             }
         }
 
-        public char[,] TheGameBoard
+        public char[,] Matrix
         {
             get
             {
                 return m_GameBoard;
             }
-        }
-
-        private void gameBoardInitialization()
+        }‏
+        private void initGameBoard()
         {
             for (int row = 0; row < m_BoardSize; row++)
             {
@@ -63,16 +62,20 @@ namespace Reversed_TicTacToe_For_Console
                 }
             }
         }
+
+        public char GetCellValue(int i_Row, int i_Col)
+        {
+            return m_GameBoard[i_Row, i_Col];
+        }
+
         public void CreateNewBoard()
         {
             AmountOfMarkedBoardCells = 0;
-            gameBoardInitialization();
+            initGameBoard();
         }
-        private static bool checkIsCellEmpty(int i_row,int i_col)
+        public void UpdateChosenCell(int i_row, int i_col, char i_PlayerSymbol)
         {
-            bool IsCellEmpty;
-
-          
+            m_GameBoard[i_row, i_col] = i_PlayerSymbol;
         }
     }
 }
