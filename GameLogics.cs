@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,14 +39,14 @@ namespace Reversed_TicTacToe_For_Console
 
         public bool CheckIsCellEmpty(int i_row, int i_col)
         {
-            bool IsCellEmpty = false;
+            bool isCellEmpty = false;
 
             if (Board.TheGameBoard[i_row, i_col]==' ')
             {
-                IsCellEmpty = true;
+                isCellEmpty = true;
             }
 
-            return IsCellEmpty;
+            return isCellEmpty;
         }
 
         public Player PlayerOne
@@ -81,14 +81,164 @@ namespace Reversed_TicTacToe_For_Console
             }
         }
 
-      
+
 
         //CheckWin :
-        //CheckHorizontal   
+        //CheckHorizontal  
+        public bool CheckHorizontal(ref int io_numOfPlayer)
+        {
+            bool isPlayerWon = false;
+            int playerOneCounter = 0;
+            int playerTwoCounter = 0;
+
+            for (int row = 0; row < Board.BoardSize; row++)
+            {
+                for (int col = 0; col < Board.BoardSize; col++)
+                {
+                    if (Board.TheGameBoard[col, row] == PlayerOne.PlayerSymbol)
+                    {
+                        playerOneCounter++;
+                    }
+                    if (Board.TheGameBoard[col, row] == PlayerTwo.PlayerSymbol)
+                    {
+                        playerTwoCounter++;
+                    }
+                }
+                if (playerOneCounter == Board.BoardSize || playerTwoCounter == Board.BoardSize)
+                {
+                    if(playerOneCounter== Board.BoardSize)
+                    {
+                        io_numOfPlayer = 2;
+                    }
+                    else
+                    {
+                        io_numOfPlayer = 1;
+                    }
+                    isPlayerWon = true;
+                }
+                playerOneCounter = 0;
+                playerTwoCounter = 0;
+            }
+
+            return isPlayerWon;
+        }
         //CheckDiagonal
+        public bool CheckDiagonal(ref int io_numOfPlayerWon)
+        {
+            bool isPlayerWon = false;
+            int col = Board.BoardSize - 1;
+            int playerOneCounter = 0;
+            int playerTwoCounter = 0;
+
+            for (int i = 0; i < Board.BoardSize; i++)
+            {
+                if (Board.TheGameBoard[i, i] == PlayerOne.PlayerSymbol)
+                {
+                    playerOneCounter++;
+                }
+                if (Board.TheGameBoard[i, i] == PlayerTwo.PlayerSymbol)
+                {
+                    playerTwoCounter++;
+                }
+                if (playerOneCounter == Board.BoardSize || playerTwoCounter == Board.BoardSize)
+                {
+                   if(playerOneCounter == Board.BoardSize)
+                   {
+                        io_numOfPlayerWon = 2;
+                   }
+                   else
+                   {
+                        io_numOfPlayerWon = 1;
+                   }
+                    isPlayerWon = true;
+                }
+            }
+            playerOneCounter = 0;
+            playerTwoCounter = 0;
+            
+            for (int row = 0; row < Board.BoardSize; row++)
+            {
+                if (Board.TheGameBoard[row, col] == PlayerOne.PlayerSymbol)
+                {
+                    playerOneCounter++;
+                }
+                if (Board.TheGameBoard[row, col] == PlayerTwo.PlayerSymbol)
+                {
+                    playerTwoCounter++;
+                }
+
+                col--;
+                if (playerOneCounter == Board.BoardSize || playerTwoCounter == Board.BoardSize)
+                {
+                    if (playerOneCounter == Board.BoardSize)
+                    {
+                        io_numOfPlayerWon = 2;
+                    }
+                    else
+                    {
+                        io_numOfPlayerWon = 1;
+                    }
+                    isPlayerWon = true;
+                }
+            }
+
+            return isPlayerWon;
+        }
         //CheckVertical
+        public bool CheckVertical(ref int io_numOfPlayerWon)
+        {
+            bool isPlayerWon = false;
+            int playerOneCounter = 0;
+            int playerTwoCounter = 0;
+
+            for (int row = 0; row < Board.BoardSize; row++)
+            {
+                for (int col = 0; col < Board.BoardSize; col++)
+                {
+                    if (Board.TheGameBoard[row, col] == PlayerOne.PlayerSymbol)
+                    {
+                        playerOneCounter++;
+                    }
+                    if (Board.TheGameBoard[row, col] == PlayerTwo.PlayerSymbol)
+                    {
+                        playerTwoCounter++;
+                    }
+                }
+                if (playerOneCounter == Board.BoardSize || playerTwoCounter == Board.BoardSize)
+                {
+                  if(playerOneCounter == Board.BoardSize)
+                  {
+                        io_numOfPlayerWon = 2;
+                  }
+                  else
+                  {
+                        io_numOfPlayerWon = 1;
+                  }
+                    isPlayerWon = true;
+                }
+                playerOneCounter = 0;
+                playerTwoCounter = 0;
+            }
+
+            return isPlayerWon;
+        }
 
         //IsTheBoardFull:
+        public bool CheckIfDraw()
+        {
+            bool draw = true;
+            for (int rowIndex = 0; rowIndex < Board.BoardSize; rowIndex++)
+            {
+                for (int colIndex = 0; colIndex < Board.BoardSize; colIndex++)
+                {
+                    if (Board.TheGameBoard[colIndex, rowIndex] == ' ')
+                    {
+                        draw = false;
+                    }
+                }
+            }
+            return draw;
+        }
         //(IsTie)
 
         //IsEndGame:
