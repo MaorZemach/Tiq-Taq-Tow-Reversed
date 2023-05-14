@@ -34,109 +34,117 @@ namespace Reversed_TicTacToe_For_Console
 
         public static bool CheckBoardSizeValidity(string i_InputStringFromUser)
         {
-            bool isValidInput = false;
+            bool v_IsValidInput = false;
 
             if (i_InputStringFromUser.All(char.IsDigit) == true)
             {
                 if (int.Parse(i_InputStringFromUser) < k_MinimumSizeOfBoard || int.Parse(i_InputStringFromUser) > k_MaximumSizeOfBoard)
                 {
-                    isValidInput = false;
+                    v_IsValidInput = false;
                 }
+
                 else
                 {
-                    isValidInput = true;
+                    v_IsValidInput = true;
                 }
             }
+
             else
             {
-                isValidInput = false;
+                v_IsValidInput = false;
             }
 
-            return isValidInput;
+            return v_IsValidInput;
         }
-
 
         public static bool CheckAmountOfPlayersValidity(string i_InputStringFromUser)
         {
-            bool isValidInput = false;
+            bool v_IsValidInput = false;
 
             if (i_InputStringFromUser.All(char.IsDigit) == true)
             {
                 if (int.Parse(i_InputStringFromUser) > 0 && int.Parse(i_InputStringFromUser) < 3)
                 {
-                    isValidInput = true;
+                    v_IsValidInput = true;
                 }
+
                 else
                 {
-                    isValidInput = false;
+                    v_IsValidInput = false;
                 }
             }
+
             else
             {
-                isValidInput = false;
+                v_IsValidInput = false;
             }
 
-            return isValidInput;
+            return v_IsValidInput;
         }
 
         public static bool CheckMoveValidity(string i_InputStringFromUser, GameLogics i_Game)
         {
-            bool isValidInput = false;
+            bool v_IsValidInput = false;
 
             if ((i_InputStringFromUser.Length == 1 && i_InputStringFromUser.Contains('Q')))
             {
-                isValidInput = true;
+                v_IsValidInput = true;
             }
+
             else
             {
                 if (i_InputStringFromUser.Length == 3 && i_InputStringFromUser[1] == ',')
                 {
                     int convertedInputRow, convertedInputCol;
-                    string i_FirstNumber = i_InputStringFromUser.Substring(0);
-                    string i_SecondNumber = i_InputStringFromUser.Substring(2);
+                    string i_FirstNumber = i_InputStringFromUser.Substring(0, 1);
+                    string i_SecondNumber = i_InputStringFromUser.Substring(2, 1);
 
-                    if ((int.TryParse(i_FirstNumber, out convertedInputRow) == true) && (int.TryParse(i_FirstNumber, out convertedInputCol) == true))
+                    if ((int.TryParse(i_FirstNumber, out convertedInputRow) == true) && (int.TryParse(i_SecondNumber, out convertedInputCol) == true))
                     {
                         if (CheckRowOrColumnValidity(convertedInputRow, i_Game) == true && CheckRowOrColumnValidity(convertedInputCol, i_Game))
                         {
-                            if (i_Game.CurrentBoard.GetCellValue(convertedInputRow, convertedInputCol) == ' ')
+                            if (i_Game.CurrentBoard.GetCellValue(convertedInputRow - 1, convertedInputCol - 1) == ' ')
                             {
-                                isValidInput = true;
+                                v_IsValidInput = true;
                             }
+
                             else
                             {
-                                isValidInput = false;
+                                v_IsValidInput = false;
                             }
                         }
+
                         else
                         {
-                            isValidInput = false;
+                            v_IsValidInput = false;
                         }
                     }
+
                     else
                     {
-                        isValidInput = false;
+                        v_IsValidInput = false;
                     }
                 }
+
                 else
                 {
-                    isValidInput = false;
+                    v_IsValidInput = false;
                 }
             }
 
-            return isValidInput;
+            return v_IsValidInput;
         }
 
         public bool CheckIsCellEmpty(int i_row, int i_col)
         {
-            bool isCellEmpty = false;
+            bool v_IsCellEmpty = false;
 
-            if (Board.Matrix[i_row, i_col]==' ')
+            if (CurrentBoard.Matrix[i_row-1, i_col-1] == ' ')
             {
-                isCellEmpty = true;
+                v_IsCellEmpty = true;
             }
 
-            return isCellEmpty;
+            return v_IsCellEmpty;
         }
 
         public void AddScoreToPlayer(int i_Player)
@@ -145,55 +153,61 @@ namespace Reversed_TicTacToe_For_Console
             {
                 PlayerOne.Score++;
             }
+
             if (i_Player == 2)
             {
                 PlayerTwo.Score++;
             }
         }
- 
+
         //CheckWin :
         //CheckHorizontal  
         public bool CheckHorizontal(ref int io_numOfPlayer)
         {
-            bool isPlayerWon = false;
+            bool v_IsPlayerWon = false;
             int playerOneCounter = 0;
             int playerTwoCounter = 0;
 
-            for (int row = 0; row < Board.BoardSize; row++)
+            for (int row = 0; row < CurrentBoard.BoardSize; row++)
             {
-                for (int col = 0; col < Board.BoardSize; col++)
+                for (int col = 0; col < CurrentBoard.BoardSize; col++)
                 {
-                    if (Board.Matrix[col, row] == PlayerOne.PlayerSymbol)
+                    if (CurrentBoard.Matrix[col, row] == PlayerOne.PlayerSymbol)
                     {
                         playerOneCounter++;
                     }
-                    if (Board.Matrix[col, row] == PlayerTwo.PlayerSymbol)
+
+                    if (CurrentBoard.Matrix[col, row] == PlayerTwo.PlayerSymbol)
                     {
                         playerTwoCounter++;
                     }
                 }
-                if (playerOneCounter == Board.BoardSize || playerTwoCounter == Board.BoardSize)
+
+                if (playerOneCounter == CurrentBoard.BoardSize || playerTwoCounter == CurrentBoard.BoardSize)
                 {
-                    if(playerOneCounter== Board.BoardSize)
+                    if (playerOneCounter == CurrentBoard.BoardSize)
                     {
                         io_numOfPlayer = 2;
                     }
+
                     else
                     {
                         io_numOfPlayer = 1;
                     }
-                    isPlayerWon = true;
+
+                    v_IsPlayerWon = true;
                 }
+
                 playerOneCounter = 0;
                 playerTwoCounter = 0;
             }
 
-            return isPlayerWon;
+            return v_IsPlayerWon;
         }
         //CheckDiagonal
         public bool CheckDiagonal(ref int io_numOfPlayerWon)
         {
-            bool isPlayerWon = false;
+            bool v_IsPlayerWon = false;
             int col = CurrentBoard.BoardSize - 1;
             int playerOneCounter = 0;
             int playerTwoCounter = 0;
@@ -204,32 +218,38 @@ namespace Reversed_TicTacToe_For_Console
                 {
                     playerOneCounter++;
                 }
+
                 if (CurrentBoard.Matrix[i, i] == PlayerTwo.PlayerSymbol)
                 {
                     playerTwoCounter++;
                 }
+
                 if (playerOneCounter == CurrentBoard.BoardSize || playerTwoCounter == CurrentBoard.BoardSize)
                 {
-                   if(playerOneCounter == CurrentBoard.BoardSize)
-                   {
+                    if (playerOneCounter == CurrentBoard.BoardSize)
+                    {
                         io_numOfPlayerWon = 2;
-                   }
-                   else
-                   {
+                    }
+
+                    else
+                    {
                         io_numOfPlayerWon = 1;
-                   }
-                    isPlayerWon = true;
+                    }
+
+                    v_IsPlayerWon = true;
                 }
             }
+
             playerOneCounter = 0;
             playerTwoCounter = 0;
-            
+
             for (int row = 0; row < CurrentBoard.BoardSize; row++)
             {
                 if (CurrentBoard.Matrix[row, col] == PlayerOne.PlayerSymbol)
                 {
                     playerOneCounter++;
                 }
+
                 if (CurrentBoard.Matrix[row, col] == PlayerTwo.PlayerSymbol)
                 {
                     playerTwoCounter++;
@@ -242,20 +262,22 @@ namespace Reversed_TicTacToe_For_Console
                     {
                         io_numOfPlayerWon = 2;
                     }
+
                     else
                     {
                         io_numOfPlayerWon = 1;
                     }
-                    isPlayerWon = true;
+
+                    v_IsPlayerWon = true;
                 }
             }
 
-            return isPlayerWon;
+            return v_IsPlayerWon;
         }
         //CheckVertical
         public bool CheckVertical(ref int io_numOfPlayerWon)
         {
-            bool isPlayerWon = false;
+            bool v_IsPlayerWon = false;
             int playerOneCounter = 0;
             int playerTwoCounter = 0;
 
@@ -272,45 +294,44 @@ namespace Reversed_TicTacToe_For_Console
                         playerTwoCounter++;
                     }
                 }
+
                 if (playerOneCounter == CurrentBoard.BoardSize || playerTwoCounter == CurrentBoard.BoardSize)
                 {
-                  if(playerOneCounter == CurrentBoard.BoardSize)
-                  {
+                    if (playerOneCounter == CurrentBoard.BoardSize)
+                    {
                         io_numOfPlayerWon = 2;
-                  }
-                  else
-                  {
+                    }
+                    else
+                    {
                         io_numOfPlayerWon = 1;
-                  }
-                    isPlayerWon = true;
+                    }
+
+                    v_IsPlayerWon = true;
                 }
+
                 playerOneCounter = 0;
                 playerTwoCounter = 0;
             }
 
-            return isPlayerWon;
+            return v_IsPlayerWon;
         }
 
         //IsTheBoardFull:
-        public bool CheckIfDraw()
+        public bool CheckIfDraw(GameLogics i_CurrentGame)
         {
-            bool draw = true;
-            for (int rowIndex = 0; rowIndex < CurrentBoard.BoardSize; rowIndex++)
+            bool v_IsDraw = false;
+
+            if(i_CurrentGame.CurrentBoard.AmountOfMarkedBoardCells == i_CurrentGame.CurrentBoard.BoardSize* i_CurrentGame.CurrentBoard.BoardSize)
             {
-                for (int colIndex = 0; colIndex < CurrentBoard.BoardSize; colIndex++)
-                {
-                    if (CurrentBoard.Matrix[colIndex, rowIndex] == ' ')
-                    {
-                        draw = false;
-                    }
-                }
+                v_IsDraw = true;
             }
-            return draw;
+
+            return v_IsDraw;
         }
 
-        public bool CheckWinner (ref int io_NumOfPlayer)
+        public bool CheckWinner(ref int io_NumOfPlayer)
         {
-            bool isPlayerWon = false;
+            bool v_IsPlayerWon = false;
             int numOfPlayerWon = 0;
 
             bool verticalWin = CheckVertical(ref numOfPlayerWon);
@@ -320,35 +341,29 @@ namespace Reversed_TicTacToe_For_Console
             {
                 AddScoreToPlayer(numOfPlayerWon);
                 io_NumOfPlayer = numOfPlayerWon;
-                isPlayerWon = true;
+                v_IsPlayerWon = true;
             }
-            return isPlayerWon;
+
+            return v_IsPlayerWon;
         }
 
         public static bool CheckRowOrColumnValidity(int i_InputRowOrCol, GameLogics i_Game)
         {
-            bool isValidInput = false;
+            bool v_IsValidInput = false;
             int boardSize = i_Game.CurrentBoard.BoardSize;
 
             if ((i_InputRowOrCol >= 1 && i_InputRowOrCol <= boardSize))
             {
-                isValidInput = true;
+                v_IsValidInput = true;
             }
+
             else
             {
-                isValidInput = false;
+                v_IsValidInput = false;
             }
 
-            return isValidInput;
+            return v_IsValidInput;
         }
-        //(IsTie)
-
-        //IsEndGame:
-        //(Tie or Win Or Q)
-
-        //UpdateBoardAfterTurn
-
-        //IncreaseWinnerScore
 
         public void SwitchPlayerTurn()
         {
@@ -362,7 +377,38 @@ namespace Reversed_TicTacToe_For_Console
             }
         }
 
+        public int GetCurrentPlayerTurn()
+        {
+            int CurrPlayer;
 
+            if (PlayerTurn == ePlayerID.Player1Turn)
+            {
+                CurrPlayer = 1;
+            }
+            else
+            {
+                CurrPlayer = 2;
+            }
+
+            return CurrPlayer;
+        }
+
+        public string CoumputerMove(GameLogics i_CurrentGame)
+        {
+            Random computerMove = new Random();
+
+            int computerRow = computerMove.Next(1, i_CurrentGame.CurrentBoard.BoardSize + 1);
+            int computerColumn = computerMove.Next(1, i_CurrentGame.CurrentBoard.BoardSize + 1);
+            while(i_CurrentGame.CheckIsCellEmpty(computerRow, computerColumn) == false)
+            {
+                computerRow = computerMove.Next(1, i_CurrentGame.CurrentBoard.BoardSize + 1);
+                computerColumn = computerMove.Next(1, i_CurrentGame.CurrentBoard.BoardSize + 1);
+            }
+                       
+            string computerInputString = computerRow.ToString() + "," + computerColumn.ToString();
+
+            return computerInputString;
+        }
         //getters & setters
         public Player PlayerOne
         {
@@ -407,5 +453,5 @@ namespace Reversed_TicTacToe_For_Console
                 m_PlayerTurn = value;
             }
         }
-
     }
+}

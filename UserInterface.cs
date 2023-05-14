@@ -67,15 +67,17 @@ namespace Reversed_TicTacToe_For_Console
             {
                 Game = new GameLogics(boardSize, true);//1 player
             }
+
             else
             {
                 Game = new GameLogics(boardSize, false);//2 players
             }
-            PrintBoard(Game);//empty board
 
+            PrintBoard(Game);//empty board
             while (v_IsEndGame == false)//run game until game ends
             {
                 validMove = getPlayerMoveInput(Game);
+
                 ExecuteValidMove(validMove, Game);
                 //check if Win / Tie
                 v_IsPlayerWon = Game.CheckWinner(ref NumOfPlayer);
@@ -85,29 +87,29 @@ namespace Reversed_TicTacToe_For_Console
                     PrintGameResults(Game);
                     v_IsEndGame = true;
                 }
+
                 else
                 {
-                    if (Game.CurrentBoard.AmountOfMarkedBoardCells == (boardSize*boardSize))
+                    if (Game.CheckIfDraw(Game) == true)
                     {
                         Console.WriteLine(k_BoardFullMsg);
                         PrintGameResults(Game);
                         v_IsEndGame = true;
                     }
                 }
+
                 if (v_IsEndGame == false)
                 {
                     Game.SwitchPlayerTurn();
                 }
+
                 else
                 {
                     isNewGame = AskForAnotherRound(Game);
-                    ExecuteEndGameDecision(isNewGame,Game);
+                    ExecuteEndGameDecision(isNewGame, Game);
                     v_IsEndGame = false;
                 }
-            }
-
-            // Console.WriteLine("testttttt ");
-            // Console.WriteLine("test ");
+            }         
         }
 
         public static int GetGameBoardSizeInput()
@@ -117,12 +119,12 @@ namespace Reversed_TicTacToe_For_Console
 
             Console.WriteLine(k_AskForBoardSizeMsg);
             inputString = Console.ReadLine();
-
             while (GameLogics.CheckBoardSizeValidity(inputString) != true)
             {
                 Console.WriteLine(k_InvalidBoardSizeMsg);
                 inputString = Console.ReadLine();
             }
+
             userInputBoardSize = int.Parse(inputString);
 
             return userInputBoardSize;
@@ -140,6 +142,7 @@ namespace Reversed_TicTacToe_For_Console
                 Console.WriteLine(k_InvalidAmountOfPlayersMsg);
                 inputString = Console.ReadLine();
             }
+
             userInputAmountPlayers = int.Parse(inputString);
 
             return userInputAmountPlayers;
@@ -162,16 +165,13 @@ namespace Reversed_TicTacToe_For_Console
                         inputString = Console.ReadLine();
                     }
                 }
+
                 else
                 {
-                    inputString = io_CurrentGame.CoumputerMove(io_CurrentGame);
-
-                    while (GameLogics.CheckMoveValidity(inputString, io_CurrentGame) != true)
-                    {
-                        inputString = io_CurrentGame.CoumputerMove(io_CurrentGame);
-                    }
+                    inputString = io_CurrentGame.CoumputerMove(io_CurrentGame);               
                 }
             }
+
             else
             {
                 Console.WriteLine("Player {0}, please enter your next move in the format of row,column or 'Q' to quit.", io_CurrentGame.GetCurrentPlayerTurn());
@@ -189,17 +189,17 @@ namespace Reversed_TicTacToe_For_Console
 
         public static void PrintBoard(GameLogics i_CurrentGame)
         {
-            Screen.Clear();
             StringBuilder boardBuilder = new StringBuilder();
 
+            Screen.Clear();           
             // Print first row of numbers
             boardBuilder.Append("  ");
             for (int colNum = 0; colNum < i_CurrentGame.CurrentBoard.BoardSize; colNum++)
             {
                 boardBuilder.Append($" {colNum + 1}  ");
             }
-            boardBuilder.AppendLine();
 
+            boardBuilder.AppendLine();
             // Print each row
             for (int rowNum = 0; rowNum < i_CurrentGame.CurrentBoard.BoardSize; rowNum++)
             {
@@ -208,15 +208,17 @@ namespace Reversed_TicTacToe_For_Console
                 {
                     boardBuilder.Append($" {i_CurrentGame.CurrentBoard.GetCellValue(rowNum, colNum)} |");
                 }
-                boardBuilder.AppendLine();
 
+                boardBuilder.AppendLine();
                 boardBuilder.Append(" ");
                 for (int colNum = 0; colNum < ((i_CurrentGame.CurrentBoard.BoardSize) * 4) + 1; colNum++)
                 {
                     boardBuilder.Append("=");
                 }
+
                 boardBuilder.AppendLine();
             }
+
             Console.WriteLine(boardBuilder.ToString());
         }
 
@@ -231,14 +233,17 @@ namespace Reversed_TicTacToe_For_Console
                 {
                     io_CurrentGame.PlayerTwo.Score++;
                 }
+
                 else//player 2 quited
                 {
                     io_CurrentGame.PlayerOne.Score++;
                 }
+
                 PrintGameResults(io_CurrentGame);
                 isNewGame = AskForAnotherRound(io_CurrentGame);
                 ExecuteEndGameDecision(isNewGame, io_CurrentGame);
             }
+
             else//valid move
             {
                 string exportedRow = i_ValidMove.Substring(0, 1);
@@ -250,10 +255,12 @@ namespace Reversed_TicTacToe_For_Console
                 {
                     io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerOne.PlayerSymbol);
                 }
+
                 else //if (io_CurrentGame.PlayerTurn == GameLogics.ePlayerID.Player1Turn)
                 {
                     io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerTwo.PlayerSymbol);
                 }
+
                 io_CurrentGame.CurrentBoard.AmountOfMarkedBoardCells++;
                 PrintBoard(io_CurrentGame);
             }
@@ -289,6 +296,7 @@ namespace Reversed_TicTacToe_For_Console
                 PrintBoard(io_currGame);
                 io_currGame.m_PlayerTurn = GameLogics.ePlayerID.Player1Turn;
             }
+
             else// 'N'
             {
                 Console.WriteLine(k_GoodByeMsg);
